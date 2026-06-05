@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CreateTest from './pages/CreateTest';
 import QuestionEditor from './pages/QuestionEditor';
 import PreviewPublish from './pages/PreviewPublish';
+import TestTracking from './pages/TestTracking';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="test/create" element={<CreateTest />} />
               <Route path="test/:testId/questions" element={<QuestionEditor />} />
               <Route path="test/:testId/preview" element={<PreviewPublish />} />
+              <Route path="tests/tracking" element={<TestTracking />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>

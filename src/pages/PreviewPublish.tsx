@@ -12,9 +12,54 @@ import {
 import Header from '../components/Layout/Header';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import type { Test } from '../types';
+import Modal from '../components/ui/Modal';
+import Input from '../components/ui/Input';
+import Select from '../components/ui/Select';
+import { subjectsApi } from '../api/subjects';
+import { testsApi } from '../api/tests';
+import type { Test, Subject, Topic, SubTopic, DifficultyLevel } from '../types';
 import toast from 'react-hot-toast';
 import './PreviewPublish.css';
+import './CreateTest.css'; // Reuse form layout styles
+
+const mockSubjects: Subject[] = [
+  { _id: '1', name: 'Physics' },
+  { _id: '2', name: 'Chemistry' },
+  { _id: '3', name: 'Mathematics' },
+  { _id: '4', name: 'English' },
+  { _id: '5', name: 'Biology' },
+];
+
+const mockTopics: Record<string, Topic[]> = {
+  '1': [
+    { _id: 't1', name: 'Mechanics', subjectId: '1' },
+    { _id: 't2', name: 'Thermodynamics', subjectId: '1' },
+    { _id: 't3', name: 'Optics', subjectId: '1' },
+  ],
+  '2': [
+    { _id: 't4', name: 'Organic Chemistry', subjectId: '2' },
+    { _id: 't5', name: 'Inorganic Chemistry', subjectId: '2' },
+  ],
+  '3': [
+    { _id: 't6', name: 'Calculus', subjectId: '3' },
+    { _id: 't7', name: 'Algebra', subjectId: '3' },
+  ],
+  '4': [
+    { _id: 't8', name: 'Grammar', subjectId: '4' },
+    { _id: 't9', name: 'Writing', subjectId: '4' },
+  ],
+  '5': [
+    { _id: 't10', name: 'Cell Biology', subjectId: '5' },
+    { _id: 't11', name: 'Genetics', subjectId: '5' },
+  ],
+};
+
+const mockSubTopics: Record<string, SubTopic[]> = {
+  't1': [{ _id: 'st1', name: 'Newton Laws', topicId: 't1' }, { _id: 'st2', name: 'Motion', topicId: 't1' }],
+  't4': [{ _id: 'st3', name: 'Hydrocarbons', topicId: 't4' }],
+  't6': [{ _id: 'st4', name: 'Derivatives', topicId: 't6' }, { _id: 'st5', name: 'Integration', topicId: 't6' }],
+  't8': [{ _id: 'st6', name: 'Tenses', topicId: 't8' }, { _id: 'st7', name: 'Application', topicId: 't8' }],
+};
 
 // Predefined mock tests lookup
 const mockTests: Record<string, Partial<Test>> = {
@@ -73,6 +118,25 @@ export default function PreviewPublish() {
   const [liveUntil, setLiveUntil] = useState('always'); // always, 3weeks, 1week, 1month, 2weeks, custom
   const [customEndDate, setCustomEndDate] = useState('');
   const [customEndTime, setCustomEndTime] = useState('11:59 PM');
+
+  // Edit Modal state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [subTopics, setSubTopics] = useState<SubTopic[]>([]);
+  const [editSubject, setEditSubject] = useState('');
+  const [editTestName, setEditTestName] = useState('');
+  const [editTopic, setEditTopic] = useState('');
+  const [editSubTopic, setEditSubTopic] = useState('');
+  const [editDuration, setEditDuration] = useState('');
+  const [editDifficulty, setEditDifficulty] = useState<DifficultyLevel>('easy');
+  const [editWrongAnswer, setEditWrongAnswer] = useState(-1);
+  const [editUnattempted, setEditUnattempted] = useState(0);
+  const [editCorrectAnswer, setEditCorrectAnswer] = useState(5);
+  const [editNumQuestions, setEditNumQuestions] = useState('');
+  const [editErrors, setEditErrors] = useState<Record<string, string>>({});
+
+  const editTotalMarks = Number(editNumQuestions || 0) * editCorrectAnswer;
   
   useEffect(() => {
     // Attempt to load from localStorage first
@@ -107,6 +171,132 @@ export default function PreviewPublish() {
       });
     }
   }, [testId]);
+
+  // Load edit modal subjects dropdown
+  useEffect(() => {
+    if (!isEditModalOpen) return;
+    const loadSubjects = async () => {
+      try {
+        const data = await subjectsApi.getAll();
+        setSubjects(data.length ? data : mockSubjects);
+      } catch {
+        setSubjects(mockSubjects);
+      }
+    };
+    loadSubjects();
+  }, [isEditModalOpen]);
+
+  // Load edit modal topics when subject changes
+  useEffect(() => {
+    if (!editSubject) { setTopics([]); return; }
+    const loadTopics = async () => {
+      try {
+        const data = await subjectsApi.getTopics(editSubject);
+        setTopics(data.length ? data : (mockTopics[editSubject] || []));
+      } catch {
+        setTopics(mockTopics[editSubject] || []);
+      }
+    };
+    loadTopics();
+  }, [editSubject]);
+
+  // Load edit modal subtopics when topic changes
+  useEffect(() => {
+    if (!editTopic) { setSubTopics([]); return; }
+    const loadSubTopics = async () => {
+      try {
+        const data = await subjectsApi.getSubTopics(editTopic);
+        setSubTopics(data.length ? data : (mockSubTopics[editTopic] || []));
+      } catch {
+        setSubTopics(mockSubTopics[editTopic] || []);
+      }
+    };
+    loadSubTopics();
+  }, [editTopic]);
+
+  // Initialize edit form when opening modal
+  const handleOpenEditModal = () => {
+    if (!test) return;
+    const subjectId = typeof test.subject === 'string' ? test.subject : (test.subject?._id || '');
+    const topicId = typeof test.topic === 'string' ? test.topic : (test.topic?._id || '');
+    const subTopicId = typeof test.subTopic === 'string' ? test.subTopic : (test.subTopic?._id || '');
+
+    setEditSubject(subjectId);
+    setEditTestName(test.name || '');
+    setEditTopic(topicId);
+    setEditSubTopic(subTopicId);
+    setEditDuration(test.duration ? `${test.duration}` : '');
+    setEditDifficulty(test.difficultyLevel || 'easy');
+    setEditWrongAnswer(test.markingScheme?.wrongAnswer ?? -1);
+    setEditUnattempted(test.markingScheme?.unattempted ?? 0);
+    setEditCorrectAnswer(test.markingScheme?.correctAnswer ?? 5);
+    setEditNumQuestions(test.numberOfQuestions ? `${test.numberOfQuestions}` : '');
+    setEditErrors({});
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = async () => {
+    // Validation
+    const errs: Record<string, string> = {};
+    if (!editSubject) errs.subject = 'Subject is required';
+    if (!editTestName.trim()) errs.testName = 'Test name is required';
+    if (!editTopic) errs.topic = 'Topic is required';
+    if (!editDuration || Number(editDuration) <= 0) errs.duration = 'Valid duration is required';
+    if (!editNumQuestions || Number(editNumQuestions) <= 0) errs.numQuestions = 'Valid question count is required';
+    
+    if (Object.keys(errs).length > 0) {
+      setEditErrors(errs);
+      return;
+    }
+
+    const updatedData = {
+      name: editTestName,
+      subject: editSubject,
+      topic: editTopic,
+      subTopic: editSubTopic,
+      duration: Number(editDuration),
+      difficultyLevel: editDifficulty,
+      markingScheme: {
+        wrongAnswer: editWrongAnswer,
+        unattempted: editUnattempted,
+        correctAnswer: editCorrectAnswer
+      },
+      numberOfQuestions: Number(editNumQuestions),
+      totalMarks: editTotalMarks
+    };
+
+    try {
+      if (test?._id) {
+        const result = await testsApi.update(test._id, updatedData);
+        setTest(result);
+      }
+      toast.success('Test configuration updated successfully!');
+      setIsEditModalOpen(false);
+    } catch {
+      // Offline / LocalStorage support
+      if (test?._id) {
+        const stored = localStorage.getItem(`test_${test._id}`);
+        const parsed = stored ? JSON.parse(stored) : {};
+        const merged = { ...parsed, ...updatedData };
+        localStorage.setItem(`test_${test._id}`, JSON.stringify(merged));
+        
+        // Let's update topic/subject mapping names locally in the page state
+        const selectedSubj = mockSubjects.find(s => s._id === editSubject) || { _id: editSubject, name: editSubject };
+        const selectedTopic = (mockTopics[editSubject] || []).find(t => t._id === editTopic) || { _id: editTopic, name: editTopic, subjectId: editSubject };
+        const selectedSubTopic = (mockSubTopics[editTopic] || []).find(st => st._id === editSubTopic) || { _id: editSubTopic, name: editSubTopic, topicId: editTopic };
+
+        setTest({
+          ...test,
+          ...merged,
+          subject: selectedSubj,
+          topic: selectedTopic,
+          subTopic: selectedSubTopic
+        });
+      }
+      toast.success('Test configuration saved locally!');
+      setIsEditModalOpen(false);
+    }
+  };
 
   if (!test) {
     return (
@@ -223,7 +413,7 @@ export default function PreviewPublish() {
                 <button 
                   className="test-summary-card__edit-btn" 
                   title="Edit test configuration"
-                  onClick={() => navigate(`/test/create`)}
+                  onClick={handleOpenEditModal}
                 >
                   <Pencil size={16} />
                 </button>
@@ -395,6 +585,129 @@ export default function PreviewPublish() {
           </div>
         </div>
       </div>
+
+      {/* Edit Test Modal */}
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit Test creation"
+      >
+        <div className="create-test__form" style={{ padding: 0, border: 'none', background: 'none' }}>
+          <div className="create-test__row">
+            <Select
+              label="Subject"
+              options={subjects.map(s => ({ value: s._id, label: s.name }))}
+              value={editSubject}
+              onChange={(e) => setEditSubject(e.target.value)}
+              error={editErrors.subject}
+            />
+            <Input
+              label="Name of Test"
+              placeholder="Enter name of Test"
+              value={editTestName}
+              onChange={(e) => setEditTestName(e.target.value)}
+              error={editErrors.testName}
+            />
+          </div>
+
+          <div className="create-test__row">
+            <Select
+              label="Topic"
+              options={topics.map(t => ({ value: t._id, label: t.name }))}
+              value={editTopic}
+              onChange={(e) => setEditTopic(e.target.value)}
+              error={editErrors.topic}
+            />
+            <Select
+              label="Sub Topic"
+              options={subTopics.map(st => ({ value: st._id, label: st.name }))}
+              value={editSubTopic}
+              onChange={(e) => setEditSubTopic(e.target.value)}
+            />
+          </div>
+
+          <div className="create-test__row">
+            <Input
+              label="Duration (Minutes)"
+              type="number"
+              value={editDuration}
+              onChange={(e) => setEditDuration(e.target.value)}
+              error={editErrors.duration}
+            />
+            <div className="create-test__difficulty">
+              <label className="create-test__label">Test Difficulty Level</label>
+              <div className="create-test__radio-group">
+                {(['easy', 'medium', 'difficult'] as DifficultyLevel[]).map((level) => (
+                  <label key={level} className="create-test__radio">
+                    <input
+                      type="radio"
+                      name="edit-difficulty"
+                      value={level}
+                      checked={editDifficulty === level}
+                      onChange={() => setEditDifficulty(level)}
+                    />
+                    <span className="create-test__radio-dot" />
+                    <span className="create-test__radio-label">
+                      {level.charAt(0).toUpperCase() + level.slice(1)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="create-test__section">
+            <h3 className="create-test__section-title">Marking Scheme:</h3>
+            <div className="create-test__marking" style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
+              <div className="create-test__marking-field">
+                <label>Wrong Answer</label>
+                <div className="create-test__number-input">
+                  <button onClick={() => setEditWrongAnswer(prev => prev - 1)}>−</button>
+                  <span>{editWrongAnswer}</span>
+                  <button onClick={() => setEditWrongAnswer(prev => prev + 1)}>+</button>
+                </div>
+              </div>
+              <div className="create-test__marking-field">
+                <label>Unattempted</label>
+                <div className="create-test__number-input">
+                  <button onClick={() => setEditUnattempted(prev => prev - 1)}>−</button>
+                  <span>+{editUnattempted}</span>
+                  <button onClick={() => setEditUnattempted(prev => prev + 1)}>+</button>
+                </div>
+              </div>
+              <div className="create-test__marking-field">
+                <label>Correct Answer</label>
+                <div className="create-test__number-input">
+                  <button onClick={() => setEditCorrectAnswer(prev => Math.max(1, prev - 1))}>−</button>
+                  <span>+{editCorrectAnswer}</span>
+                  <button onClick={() => setEditCorrectAnswer(prev => prev + 1)}>+</button>
+                </div>
+              </div>
+              <Input
+                label="No of Questions"
+                type="number"
+                value={editNumQuestions}
+                onChange={(e) => setEditNumQuestions(e.target.value)}
+                error={editErrors.numQuestions}
+              />
+              <Input
+                label="Total Marks"
+                value={editTotalMarks ? `${editTotalMarks}` : ''}
+                readOnly
+              />
+            </div>
+          </div>
+
+          <div className="preview-publish__actions" style={{ marginTop: '24px' }}>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEdit}>
+              Save Changes
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

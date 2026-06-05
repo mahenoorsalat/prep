@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Bold, Italic, Underline, Strikethrough,
@@ -42,44 +42,102 @@ export default function QuestionEditor() {
   const { testId } = useParams();
   const navigate = useNavigate();
 
-  // Initialize with some empty questions
-  const [questions, setQuestions] = useState<QuestionData[]>(() => {
-    const stored = localStorage.getItem(`test_${testId}`);
-    const test = stored ? JSON.parse(stored) : null;
-    const count = test?.numberOfQuestions || 6;
-    return Array.from({ length: Math.min(count, 6) }, (_, i) => createEmptyQuestion(i + 1));
-  });
-
+  const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeQuestion = questions[activeIndex];
+  const activeQuestion = questions[activeIndex] || createEmptyQuestion(1);
+
+  // Helper to save all questions to localStorage in API format
+  const saveQuestionsToStorage = useCallback((updatedList: QuestionData[]) => {
+    const apiQuestions = updatedList.map((q, idx) => ({
+      _id: q.id,
+      testId: testId || '',
+      questionNumber: idx + 1,
+      questionText: q.questionText,
+      options: q.options.map((o, oIdx) => ({
+        id: `opt-${idx + 1}-${oIdx + 1}-${Math.floor(Math.random() * 1000)}`,
+        text: o.text,
+        isCorrect: o.isCorrect
+      })),
+      solution: q.solution,
+      difficultyLevel: q.difficulty,
+      topic: q.topic,
+      subTopic: q.subTopic,
+      marks: 5
+    }));
+    localStorage.setItem(`test_${testId}_questions`, JSON.stringify(apiQuestions));
+  }, [testId]);
+
+  // Load questions on mount
+  useEffect(() => {
+    const storedTest = localStorage.getItem(`test_${testId}`);
+    const testConfig = storedTest ? JSON.parse(storedTest) : null;
+    const requiredCount = testConfig?.numberOfQuestions || 6;
+
+    const storedQuestions = localStorage.getItem(`test_${testId}_questions`);
+    if (storedQuestions) {
+      try {
+        const parsed = JSON.parse(storedQuestions);
+        if (parsed && parsed.length > 0) {
+          const mapped: QuestionData[] = parsed.map((q: any, idx: number) => ({
+            id: q._id || `q-${idx + 1}`,
+            questionText: q.questionText || '',
+            options: q.options ? q.options.map((o: any) => ({ text: o.text || '', isCorrect: !!o.isCorrect })) : [
+              { text: '', isCorrect: false },
+              { text: '', isCorrect: false },
+              { text: '', isCorrect: false },
+              { text: '', isCorrect: false },
+            ],
+            solution: q.solution || '',
+            difficulty: q.difficultyLevel || 'easy',
+            topic: q.topic || '',
+            subTopic: q.subTopic || '',
+            saved: true
+          }));
+          setQuestions(mapped);
+          return;
+        }
+      } catch (e) {
+        console.error('Error loading stored questions:', e);
+      }
+    }
+
+    // Fallback: Init empty list matching configuration count
+    const initialQuestions = Array.from({ length: requiredCount }, (_, i) => createEmptyQuestion(i + 1));
+    setQuestions(initialQuestions);
+    saveQuestionsToStorage(initialQuestions);
+  }, [testId, saveQuestionsToStorage]);
 
   const updateQuestion = useCallback((field: string, value: unknown) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
-        i === activeIndex ? { ...q, [field]: value, saved: false } : q
-      )
-    );
-  }, [activeIndex]);
+    setQuestions((prev) => {
+      const updated = prev.map((q, i) =>
+        i === activeIndex ? { ...q, [field]: value, saved: true } : q
+      );
+      saveQuestionsToStorage(updated);
+      return updated;
+    });
+  }, [activeIndex, saveQuestionsToStorage]);
 
   const updateOption = useCallback((optIndex: number, text: string) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
+    setQuestions((prev) => {
+      const updated = prev.map((q, i) =>
         i === activeIndex
           ? {
               ...q,
               options: q.options.map((o, j) =>
                 j === optIndex ? { ...o, text } : o
               ),
-              saved: false,
+              saved: true,
             }
           : q
-      )
-    );
-  }, [activeIndex]);
+      );
+      saveQuestionsToStorage(updated);
+      return updated;
+    });
+  }, [activeIndex, saveQuestionsToStorage]);
 
   const setCorrectOption = useCallback((optIndex: number) => {
-    setQuestions((prev) =>
-      prev.map((q, i) =>
+    setQuestions((prev) => {
+      const updated = prev.map((q, i) =>
         i === activeIndex
           ? {
               ...q,
@@ -87,22 +145,37 @@ export default function QuestionEditor() {
                 ...o,
                 isCorrect: j === optIndex,
               })),
-              saved: false,
+              saved: true,
             }
           : q
-      )
-    );
-  }, [activeIndex]);
+      );
+      saveQuestionsToStorage(updated);
+      return updated;
+    });
+  }, [activeIndex, saveQuestionsToStorage]);
 
   const addQuestion = () => {
     const newQ = createEmptyQuestion(questions.length + 1);
-    setQuestions((prev) => [...prev, newQ]);
+    const updated = [...questions, newQ];
+    setQuestions(updated);
+    saveQuestionsToStorage(updated);
     setActiveIndex(questions.length);
+
+    // Update test configuration count in localStorage
+    const storedTest = localStorage.getItem(`test_${testId}`);
+    if (storedTest) {
+      const parsed = JSON.parse(storedTest);
+      parsed.numberOfQuestions = updated.length;
+      parsed.totalMarks = updated.length * (parsed.markingScheme?.correctAnswer || 5);
+      localStorage.setItem(`test_${testId}`, JSON.stringify(parsed));
+    }
   };
 
   const deleteAllEdits = () => {
     if (!confirm('Delete all edits? This cannot be undone.')) return;
-    setQuestions(questions.map((q) => ({ ...createEmptyQuestion(parseInt(q.id.split('-')[1])), id: q.id })));
+    const cleared = questions.map((q) => ({ ...createEmptyQuestion(parseInt(q.id.split('-')[1] || '1')), id: q.id }));
+    setQuestions(cleared);
+    saveQuestionsToStorage(cleared);
   };
 
   const handleNext = () => {
