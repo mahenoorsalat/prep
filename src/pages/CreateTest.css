@@ -1,0 +1,209 @@
+.create-test__content {
+  padding: var(--spacing-6) var(--spacing-8);
+  max-width: 960px;
+}
+
+/* Tabs */
+.create-test__tabs {
+  display: flex;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.create-test__tab {
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: 450;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.create-test__tab--active {
+  background: var(--color-bg-card);
+  color: var(--color-primary);
+  font-weight: 600;
+  border-color: var(--color-primary);
+  border-bottom: 1px solid var(--color-bg-card);
+}
+
+.create-test__tab:hover:not(.create-test__tab--active) {
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+/* Form */
+.create-test__form {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  border: 1px solid var(--color-border-light);
+}
+
+.create-test__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-5);
+  margin-bottom: var(--spacing-5);
+}
+
+/* Difficulty radio group */
+.create-test__difficulty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.create-test__label {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.create-test__radio-group {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: center;
+  padding: 10px 0;
+}
+
+.create-test__radio {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+}
+
+.create-test__radio input {
+  display: none;
+}
+
+.create-test__radio-dot {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.create-test__radio input:checked + .create-test__radio-dot {
+  border-color: var(--color-primary);
+}
+
+.create-test__radio input:checked + .create-test__radio-dot::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+.create-test__radio-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+/* Section title */
+.create-test__section {
+  margin-top: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.create-test__section-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+/* Marking scheme */
+.create-test__marking {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-4);
+  align-items: end;
+}
+
+.create-test__marking-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.create-test__marking-field label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.create-test__number-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 42px;
+}
+
+.create-test__number-input button {
+  width: 32px;
+  height: 100%;
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-test__number-input button:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.create-test__number-input span {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Actions */
+.create-test__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
+  padding-top: var(--spacing-5);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create-test__row {
+    grid-template-columns: 1fr;
+  }
+
+  .create-test__marking {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .create-test__content {
+    padding: var(--spacing-4);
+  }
+}
