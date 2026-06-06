@@ -1,4 +1,4 @@
-import { Bell, ChevronDown } from 'lucide-react';
+import { Bell, ChevronDown, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Header.css';
@@ -14,6 +14,14 @@ export default function Header({ breadcrumb, actions }: HeaderProps) {
   return (
     <header className="header">
       <div className="header__left">
+        <button
+          className="header__menu-btn"
+          onClick={() => window.dispatchEvent(new CustomEvent('toggle-sidebar'))}
+          title="Open Menu"
+          type="button"
+        >
+          <Menu size={22} />
+        </button>
         {breadcrumb && breadcrumb.length > 0 && (
           <nav className="header__breadcrumb">
             {breadcrumb.map((item, index) => (

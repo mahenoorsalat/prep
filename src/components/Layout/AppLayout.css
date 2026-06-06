@@ -10,9 +10,23 @@
 .app-layout__main {
   flex: 1;
   height: 100%;
-  margin-left: 240px;
   background: var(--color-bg);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.app-layout__main--standard {
+  margin-left: 240px;
+}
+
+.app-layout__main--editor {
+  margin-left: 60px;
+}
+
+@media (max-width: 768px) {
+  .app-layout__main--standard,
+  .app-layout__main--editor {
+    margin-left: 0;
+  }
 }

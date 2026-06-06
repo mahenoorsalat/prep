@@ -119,3 +119,56 @@
   background: var(--color-primary);
   border-radius: 4px 0 0 4px;
 }
+
+/* Mobile backdrop overlay */
+.sidebar__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 10, 58, 0.2);
+  backdrop-filter: blur(2px);
+  z-index: 990;
+  animation: fadeIn var(--transition-fast);
+}
+
+/* Responsive sidebar drawers */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .sidebar--open {
+    pointer-events: auto;
+  }
+
+  .sidebar__main {
+    position: fixed;
+    left: -240px;
+    height: 100%;
+    z-index: 1000;
+    transition: transform var(--transition-slow);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .sidebar__main--open {
+    transform: translateX(240px);
+  }
+
+  .sidebar__icons {
+    position: fixed;
+    left: -60px;
+    height: 100%;
+    z-index: 1000;
+    transition: transform var(--transition-slow);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .sidebar--open .sidebar__icons {
+    transform: translateX(60px);
+  }
+}

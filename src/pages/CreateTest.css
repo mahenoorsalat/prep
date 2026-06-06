@@ -2,11 +2,14 @@
   padding: 20px;
 }
 
-/* Tabs */
 .create-test__tabs {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .create-test__tab {
@@ -19,6 +22,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .create-test__tab--active {
@@ -200,5 +204,17 @@
 
   .create-test__content {
     padding: var(--spacing-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .create-test__marking {
+    grid-template-columns: 1fr;
+  }
+  .create-test__actions {
+    flex-direction: column-reverse;
+  }
+  .create-test__actions button {
+    width: 100%;
   }
 }
