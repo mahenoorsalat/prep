@@ -8,6 +8,7 @@ import {
 import Header from '../components/Layout/Header';
 import Button from '../components/ui/Button';
 import Select from '../components/ui/Select';
+import Logo from '../components/ui/Logo';
 import type { DifficultyLevel } from '../types';
 import './QuestionEditor.css';
 
@@ -44,6 +45,7 @@ export default function QuestionEditor() {
 
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [testConfig, setTestConfig] = useState<any>(null);
   const activeQuestion = questions[activeIndex] || createEmptyQuestion(1);
 
   // Helper to save all questions to localStorage in API format
@@ -70,8 +72,9 @@ export default function QuestionEditor() {
   // Load questions on mount
   useEffect(() => {
     const storedTest = localStorage.getItem(`test_${testId}`);
-    const testConfig = storedTest ? JSON.parse(storedTest) : null;
-    const requiredCount = testConfig?.numberOfQuestions || 6;
+    const parsedTest = storedTest ? JSON.parse(storedTest) : null;
+    setTestConfig(parsedTest);
+    const requiredCount = parsedTest?.numberOfQuestions || 6;
 
     const storedQuestions = localStorage.getItem(`test_${testId}_questions`);
     if (storedQuestions) {
@@ -208,11 +211,19 @@ export default function QuestionEditor() {
           { label: 'Create Test', path: '/test/create' },
           { label: 'Chapter Wise' },
         ]}
+        actions={
+          <Button onClick={handleNext} style={{ background: '#1B5DEF', color: 'white', padding: '10px 24px', borderRadius: '8px', fontSize: '14px', fontWeight: '500', height: '42px', border: 'none' }}>
+            Publish
+          </Button>
+        }
       />
 
       <div className="question-editor__layout">
         {/* Left sidebar — Question list */}
         <aside className="question-editor__sidebar">
+          <div style={{ padding: '4px 0 20px 0', borderBottom: '1px solid var(--color-border-light)', marginBottom: '20px' }}>
+            <Logo size="lg" />
+          </div>
           <div className="question-editor__sidebar-header">
             <div className="question-editor__sidebar-title">
               <span>Question creation</span>
@@ -248,12 +259,57 @@ export default function QuestionEditor() {
 
         {/* Right panel — Editor */}
         <div className="question-editor__main">
+          {testConfig && (
+            <div className="question-editor__summary-card">
+              <div className="q-editor-summary__left">
+                <div className="q-editor-summary__header-row">
+                  <span className="q-editor-summary__type-badge">
+                    {testConfig.testType === 'chapterwise' ? 'Chapter Wise' : testConfig.testType === 'pyq' ? 'PYQ' : 'Mock Test'}
+                  </span>
+                  <span className="q-editor-summary__difficulty-badge">
+                    {(testConfig.difficultyLevel || 'easy').charAt(0).toUpperCase() + (testConfig.difficultyLevel || 'easy').slice(1)}
+                  </span>
+                </div>
+                <div className="q-editor-summary__details" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
+                  <span className="q-editor-summary__detail-item">
+                    <strong>Subject :</strong> {testConfig.subject === '1' ? 'Physics' : testConfig.subject === '2' ? 'Chemistry' : testConfig.subject === '3' ? 'Mathematics' : testConfig.subject === '4' ? 'English' : 'Biology'}
+                  </span>
+                  <span className="q-editor-summary__detail-item" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <strong>Topic :</strong>
+                    <span className="q-editor-summary__yellow-pill">
+                      {testConfig.topic === 't1' ? 'Mechanics' : testConfig.topic === 't2' ? 'Thermodynamics' : testConfig.topic === 't3' ? 'Optics' : testConfig.topic === 't4' ? 'Organic Chemistry' : testConfig.topic === 't5' ? 'Inorganic Chemistry' : testConfig.topic === 't6' ? 'Calculus' : testConfig.topic === 't7' ? 'Algebra' : testConfig.topic === 't8' ? 'Grammar' : testConfig.topic === 't9' ? 'Writing' : 'Cell Biology'}
+                    </span>
+                  </span>
+                  <span className="q-editor-summary__detail-item" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <strong>Sub Topic :</strong>
+                    <span className="q-editor-summary__yellow-pill">
+                      {testConfig.subTopic === 'st1' ? 'Newton Laws' : testConfig.subTopic === 'st2' ? 'Motion' : testConfig.subTopic === 'st3' ? 'Hydrocarbons' : testConfig.subTopic === 'st4' ? 'Derivatives' : testConfig.subTopic === 'st5' ? 'Integration' : testConfig.subTopic === 'st6' ? 'Tenses' : 'Application'}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div className="q-editor-summary__right">
+                <div className="q-editor-summary__stats">
+                  <span className="q-editor-summary__stat-badge">{testConfig.duration} Min</span>
+                  <span className="q-editor-summary__stat-badge">{testConfig.numberOfQuestions} Q's</span>
+                  <span className="q-editor-summary__stat-badge">{testConfig.totalMarks || (testConfig.numberOfQuestions * 5)} Marks</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="question-editor__editor animate-fadeIn" key={activeIndex}>
             {/* Question number */}
-            <h2 className="question-editor__q-number">
-              Question {activeIndex + 1}
-              <span className="question-editor__q-total">/{questions.length}</span>
-            </h2>
+            <div className="question-editor__editor-header">
+              <h2 className="question-editor__q-number">
+                Question {activeIndex + 1}
+                <span className="question-editor__q-total">/{questions.length}</span>
+              </h2>
+              <div className="question-editor__editor-actions">
+                <button className="question-editor__editor-btn">+ MCQ</button>
+                <button className="question-editor__editor-btn">+ CSV</button>
+              </div>
+            </div>
 
             {/* Rich text toolbar */}
             <div className="question-editor__toolbar">
@@ -299,6 +355,27 @@ export default function QuestionEditor() {
                       value={opt.text}
                       onChange={(e) => updateOption(idx, e.target.value)}
                     />
+                    <button
+                      type="button"
+                      className="question-editor__option-clear"
+                      title="Clear option"
+                      onClick={() => updateOption(idx, '')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--color-text-tertiary)',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'color 0.2s'
+                      }}
+                      onMouseOver={(e) => (e.currentTarget.style.color = 'var(--color-error)')}
+                      onMouseOut={(e) => (e.currentTarget.style.color = 'var(--color-text-tertiary)')}
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 ))}
               </div>

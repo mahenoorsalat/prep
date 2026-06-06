@@ -5,7 +5,7 @@ interface LogoProps {
 export default function Logo({ size = 'lg' }: LogoProps) {
   if (size === 'sm') {
     return (
-      <div className="preproute-logo-sm" style={{ width: 134.74, height: 33.04, position: 'relative' }}>
+      <div style={{ width: 134.74, height: 33.04, position: 'relative' }}>
         <div style={{ width: 66.01, height: 27.61, left: 9.49, top: 0, position: 'absolute', background: '#000A3A' }} />
         <div style={{ width: 14.37, height: 19.76, left: 47.56, top: 13.28, position: 'absolute', background: '#1B5DEF' }} />
         <div style={{ width: 13.62, height: 14.01, left: 92.64, top: 13.50, position: 'absolute', background: '#1B5DEF' }} />
@@ -17,15 +17,14 @@ export default function Logo({ size = 'lg' }: LogoProps) {
         <div style={{ width: 11.20, height: 18.32, left: 3.49, top: 1.56, position: 'absolute', background: '#1B5DEF' }} />
         <div style={{ width: 9.93, height: 14.03, left: 20.56, top: 13.48, position: 'absolute', background: '#1B5DEF' }} />
         <div style={{ width: 6.95, height: 14.10, left: 11.30, top: 5.85, position: 'absolute', background: '#1B5DEF' }} />
-        <div style={{ width: 1.54, height: 4.25, left: 8.99, top: 1.56, position: 'absolute', background: '#000A3A' }} />
-        <div style={{ width: 1.41, height: 4.25, left: 7.51, top: 1.56, position: 'absolute', background: '#000A3A' }} />
+        <div style={{ width: 1.54, height: 4.25, left: 8.99, top: 1.56, position: 'absolute', background: 'var(--core-colors-student-primary-Brand-very-dark-logo, #000A3A)' }} />
+        <div style={{ width: 1.41, height: 4.25, left: 7.51, top: 1.56, position: 'absolute', background: 'var(--core-colors-student-primary-Brand-very-dark-logo, #000A3A)' }} />
       </div>
     );
   }
 
-  // Large Logo (e.g. Sidebar logo)
   return (
-    <div className="preproute-logo-lg" style={{ width: 169, height: 41, position: 'relative' }}>
+    <div style={{ width: 169, height: 41, position: 'relative' }}>
       <div style={{ width: 82.79, height: 34.26, left: 11.91, top: 0, position: 'absolute', background: '#000A3A' }} />
       <div style={{ width: 18.02, height: 24.52, left: 59.65, top: 16.48, position: 'absolute', background: '#1B5DEF' }} />
       <div style={{ width: 17.09, height: 17.38, left: 116.19, top: 16.76, position: 'absolute', background: '#1B5DEF' }} />
@@ -37,8 +36,8 @@ export default function Logo({ size = 'lg' }: LogoProps) {
       <div style={{ width: 14.05, height: 22.73, left: 4.38, top: 1.94, position: 'absolute', background: '#1B5DEF' }} />
       <div style={{ width: 12.45, height: 17.41, left: 25.79, top: 16.72, position: 'absolute', background: '#1B5DEF' }} />
       <div style={{ width: 8.72, height: 17.50, left: 14.18, top: 7.25, position: 'absolute', background: '#1B5DEF' }} />
-      <div style={{ width: 1.94, height: 5.28, left: 11.27, top: 1.94, position: 'absolute', background: '#000A3A' }} />
-      <div style={{ width: 1.77, height: 5.28, left: 9.42, top: 1.94, position: 'absolute', background: '#000A3A' }} />
+      <div style={{ width: 1.94, height: 5.28, left: 11.27, top: 1.94, position: 'absolute', background: 'var(--core-colors-student-primary-Brand-very-dark-logo, #000A3A)' }} />
+      <div style={{ width: 1.77, height: 5.28, left: 9.42, top: 1.94, position: 'absolute', background: 'var(--core-colors-student-primary-Brand-very-dark-logo, #000A3A)' }} />
     </div>
   );
 }

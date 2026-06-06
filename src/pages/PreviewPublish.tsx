@@ -15,6 +15,7 @@ import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
+import Logo from '../components/ui/Logo';
 import { subjectsApi } from '../api/subjects';
 import { testsApi } from '../api/tests';
 import type { Test, Subject, Topic, SubTopic, DifficultyLevel } from '../types';
@@ -360,8 +361,11 @@ export default function PreviewPublish() {
 
       <div className="preview-publish__layout">
         {/* Left sidebar — Question Status list (mirroring the figma sidebar style) */}
-        <aside className="preview-publish__sidebar">
-          <div className="preview-publish__sidebar-header">
+        <aside className="preview-publish__sidebar" style={{ padding: '20px' }}>
+          <div style={{ padding: '4px 0 20px 0', borderBottom: '1px solid var(--color-border-light)', marginBottom: '20px' }}>
+            <Logo size="lg" />
+          </div>
+          <div className="preview-publish__sidebar-header" style={{ padding: '0 0 16px 0', borderBottom: 'none' }}>
             <div className="preview-publish__sidebar-title">
               <span>Question creation</span>
               <button className="preview-publish__collapse">
@@ -371,7 +375,7 @@ export default function PreviewPublish() {
             <p className="preview-publish__total">Total Questions : {test.numberOfQuestions || 50}</p>
           </div>
 
-          <div className="preview-publish__question-list">
+          <div className="preview-publish__question-list" style={{ padding: '12px 0' }}>
             {Array.from({ length: test.numberOfQuestions || 6 }).map((_, idx) => (
               <div
                 key={idx}

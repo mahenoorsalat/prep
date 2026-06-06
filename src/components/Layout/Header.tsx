@@ -5,9 +5,10 @@ import './Header.css';
 
 interface HeaderProps {
   breadcrumb?: Array<{ label: string; path?: string }>;
+  actions?: React.ReactNode;
 }
 
-export default function Header({ breadcrumb }: HeaderProps) {
+export default function Header({ breadcrumb, actions }: HeaderProps) {
   const { user, logout } = useAuth();
 
   return (
@@ -30,9 +31,13 @@ export default function Header({ breadcrumb }: HeaderProps) {
       </div>
 
       <div className="header__right">
-        <button className="header__notification" title="Notifications">
-          <Bell size={20} />
-        </button>
+        {actions && <div className="header__actions" style={{ marginRight: '12px' }}>{actions}</div>}
+        <div className="header__notification-wrapper">
+          <button className="header__notification" title="Notifications">
+            <Bell size={20} />
+          </button>
+          <span className="header__notification-dot"></span>
+        </div>
 
         <div className="header__user" onClick={logout} title="Click to logout">
           <div className="header__avatar">

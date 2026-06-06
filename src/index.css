@@ -4,26 +4,43 @@
    Design Tokens — Preproute Test Management
    ============================================================ */
 :root {
+  /* Brand Figma Colors */
+  --core-colors-student-primary-Brand-semi-white: #F7FBFF;
+  --core-colors-student-primary-Brand-light: #60A5FA;
+  --core-colors-student-primary-Brand-primary: #1B5DEF;
+  --core-colors-student-primary-Brand-primary-btn: #5988EF;
+  --core-colors-student-primary-Brand-primary-hover: #114BCA;
+  --core-colors-semantic-text-color-medium: #374151;
+  --core-colors-semantic-text-color-disabled: #D1D5DB;
+  --core-colors-semantic-border-strong: #9CA3AF;
+  --core-colors-semantic-border-light: #E5E7EB;
+  --core-colors-semantic-bg-page: white;
+  --core-colors-gray-gray-0: white;
+  --core-colors-gray-gray-50: #FAFAFA;
+  --core-colors-gray-gray-200: #E5E7EB;
+  --core-colors-student-primary-Brand-very-dark-logo: #000A3A;
+  --core-colors-student-primary-Brand-logo: #1B5DEF;
+
   /* Colors */
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-primary-light: #DBEAFE;
-  --color-primary-50: #EFF6FF;
+  --color-primary: var(--core-colors-student-primary-Brand-logo);
+  --color-primary-hover: var(--core-colors-student-primary-Brand-primary-hover);
+  --color-primary-light: #EFF6FF;
+  --color-primary-50: #F0F6FF;
 
-  --color-bg: #F3F4F8;
-  --color-bg-card: #FFFFFF;
-  --color-bg-sidebar: #FFFFFF;
-  --color-bg-header: #FFFFFF;
+  --color-bg: var(--core-colors-student-primary-Brand-semi-white);
+  --color-bg-card: var(--core-colors-gray-gray-0);
+  --color-bg-sidebar: var(--core-colors-gray-gray-0);
+  --color-bg-header: var(--core-colors-gray-gray-0);
 
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  --color-border: var(--core-colors-semantic-border-light);
+  --color-border-light: var(--core-colors-semantic-border-light);
 
-  --color-text-primary: #111827;
-  --color-text-secondary: #6B7280;
-  --color-text-tertiary: #9CA3AF;
+  --color-text-primary: var(--core-colors-semantic-text-color-medium);
+  --color-text-secondary: var(--core-colors-semantic-text-color-medium);
+  --color-text-tertiary: var(--core-colors-semantic-text-color-disabled);
   --color-text-white: #FFFFFF;
 
-  --color-success: #10B981;
+  --color-success: #0C9D61;
   --color-success-light: #D1FAE5;
   --color-warning: #F59E0B;
   --color-warning-light: #FEF3C7;
@@ -57,9 +74,9 @@
   --spacing-12: 3rem;
 
   /* Layout */
-  --sidebar-width: 220px;
-  --icon-sidebar-width: 48px;
-  --header-height: 64px;
+  --sidebar-width: 200px;
+  --icon-sidebar-width: 40px;
+  --header-height: 88px;
 
   /* Borders */
   --radius-sm: 6px;
@@ -106,6 +123,7 @@ body {
 
 #root {
   min-height: 100vh;
+  width: 100%;
 }
 
 a {

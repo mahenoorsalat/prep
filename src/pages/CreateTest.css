@@ -1,41 +1,36 @@
 .create-test__content {
-  padding: var(--spacing-6) var(--spacing-8);
-  max-width: 960px;
+  padding: 20px;
 }
 
 /* Tabs */
 .create-test__tabs {
   display: flex;
-  gap: var(--spacing-1);
-  margin-bottom: var(--spacing-6);
-  border-bottom: 1px solid var(--color-border-light);
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .create-test__tab {
-  padding: 10px 20px;
-  border: 1px solid var(--color-border);
-  border-bottom: none;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-base);
-  font-weight: 450;
+  padding: 10px 24px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
-  margin-bottom: -1px;
 }
 
 .create-test__tab--active {
-  background: var(--color-bg-card);
-  color: var(--color-primary);
-  font-weight: 600;
-  border-color: var(--color-primary);
-  border-bottom: 1px solid var(--color-bg-card);
+  background: #000A3A;
+  color: white;
+  border-color: #000A3A;
+  font-weight: 500;
 }
 
 .create-test__tab:hover:not(.create-test__tab--active) {
-  color: var(--color-text-primary);
-  background: var(--color-bg);
+  background: #F3F4F6;
+  border-color: #D1D5DB;
 }
 
 /* Form */

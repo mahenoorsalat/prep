@@ -38,24 +38,24 @@ export default function Login() {
 
   return (
     <div style={{
-      width: '100%',
-      minHeight: '100vh',
+      width: '100vw',
+      height: '100vh',
       background: 'var(--core-colors-student-primary-Brand-semi-white, #F7FBFF)',
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'stretch',
-      overflowX: 'hidden'
+      overflow: 'hidden'
     }}>
       {/* Left panel - Figma Illustration */}
       <div style={{
-        flex: 1,
+        width: '48%',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         background: 'var(--core-colors-student-primary-Brand-semi-white, #F7FBFF)',
-        padding: '40px'
-      }} className="login-illustration-container">
+        borderRight: '1px solid var(--color-border-light)'
+      }}>
         <div style={{ width: 467, height: 344, position: 'relative' }}>
           <div style={{ width: 63.77, height: 82.58, left: 227.91, top: 138.81, position: 'absolute', background: 'black' }} />
           <div style={{ width: 13.85, height: 4.56, left: 153.08, top: 138.81, position: 'absolute', background: 'black' }} />
@@ -97,157 +97,143 @@ export default function Login() {
 
       {/* Right panel - White Login Card */}
       <div style={{
-        flex: 1,
+        width: '52%',
+        height: '100%',
+        background: 'var(--core-colors-gray-gray-0, white)',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px'
-      }} className="login-form-container">
+        alignItems: 'center'
+      }}>
         <form onSubmit={handleSubmit} style={{
           width: '100%',
           maxWidth: '510px',
-          padding: '60px 40px',
+          padding: '24px',
           background: 'var(--core-colors-gray-gray-0, white)',
-          borderRadius: '8px',
-          outline: '0.50px var(--core-colors-student-primary-Brand-light, #60A5FA) solid',
           display: 'flex',
           flexDirection: 'column',
-          gap: '30px',
-          boxShadow: '0 4px 20px rgba(0, 10, 58, 0.04)'
+          justifyContent: 'center',
+          gap: 30,
+          border: 'none',
+          outline: 'none'
         }}>
-          {/* Logo container */}
-          <div style={{ width: 134.74, height: 33.04, position: 'relative' }}>
-            <Logo size="sm" />
-          </div>
-
-          {/* Heading */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: '20px', fontFamily: 'Inter', fontWeight: '600', lineHeight: '30px' }}>Login</div>
-            <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: '12px', fontFamily: 'Inter', fontWeight: '400', lineHeight: '18px' }}>Use your company provided Login credentials</div>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div style={{
-              color: 'var(--color-error, #EF4444)',
-              background: '#FEE2E2',
-              border: '0.5px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: '6px',
-              padding: '10px 14px',
-              fontSize: '13px',
-              fontFamily: 'Inter'
-            }}>
-              {error}
+          <div style={{ alignSelf: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 30, display: 'flex' }}>
+            {/* Logo */}
+            <div style={{ width: 134.74, height: 33.04, position: 'relative' }}>
+              <Logo size="sm" />
             </div>
-          )}
 
-          {/* Form Fields */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            {/* User ID Field */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: '16px', fontFamily: 'Inter', fontWeight: '500', lineHeight: '24px' }}>User ID</div>
-              <div style={{
-                height: '48px',
-                padding: '0 16px',
-                background: 'var(--core-colors-semantic-bg-page, white)',
-                borderRadius: '8px',
-                border: '0.50px var(--core-colors-semantic-border-strong, #9CA3AF) solid',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <input
-                  type="text"
-                  placeholder="Enter User ID"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
-                  autoComplete="username"
-                  style={{
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    color: 'var(--core-colors-semantic-text-color-medium, #374151)',
-                    fontSize: '16px',
-                    fontFamily: 'Inter',
-                    fontWeight: '500',
-                    width: '100%'
-                  }}
-                />
+            {/* Title & Subtitle */}
+            <div style={{ alignSelf: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 30, display: 'flex' }}>
+              <div style={{ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 20, display: 'flex' }}>
+                <div style={{ width: 79, color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: 20, fontFamily: 'Inter', fontWeight: '600', lineHeight: '30px' }}>Login</div>
+                <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: 12, fontFamily: 'Inter', fontWeight: '400', lineHeight: '18px' }}>Use your company provided Login credentials</div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div style={{
+                  alignSelf: 'stretch',
+                  color: 'var(--color-error, #EF4444)',
+                  background: '#FEE2E2',
+                  border: '0.5px solid rgba(239, 68, 68, 0.2)',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  fontSize: '13px',
+                  fontFamily: 'Inter'
+                }}>
+                  {error}
+                </div>
+              )}
+
+              {/* Form Fields */}
+              <div style={{ alignSelf: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 30, display: 'flex' }}>
+                <div style={{ alignSelf: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 15, display: 'flex' }}>
+                  <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', lineHeight: '24px' }}>User ID</div>
+                  <div style={{ alignSelf: 'stretch', height: 48, padding: '0 16px', background: 'var(--core-colors-semantic-bg-page, white)', borderRadius: 8, outline: '0.50px var(--core-colors-semantic-border-strong, #9CA3AF) solid', outlineOffset: '-0.50px', justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex' }}>
+                    <input
+                      type="text"
+                      placeholder="Enter User ID"
+                      value={userId}
+                      onChange={(e) => setUserId(e.target.value)}
+                      autoComplete="username"
+                      style={{
+                        flex: '1 1 0',
+                        border: 'none',
+                        outline: 'none',
+                        background: 'transparent',
+                        color: 'var(--core-colors-semantic-text-color-medium, #374151)',
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: '500',
+                        lineHeight: '24px',
+                        width: '100%'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ alignSelf: 'stretch', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 15, display: 'flex' }}>
+                  <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', lineHeight: '24px' }}>Password</div>
+                  <div style={{ alignSelf: 'stretch', height: 48, padding: '0 16px', background: 'var(--core-colors-semantic-bg-page, white)', borderRadius: 8, outline: '0.50px var(--core-colors-semantic-border-strong, #9CA3AF) solid', outlineOffset: '-0.50px', justifyContent: 'flex-start', alignItems: 'center', gap: 8, display: 'inline-flex' }}>
+                    <input
+                      type="password"
+                      placeholder="Enter Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="current-password"
+                      style={{
+                        flex: '1 1 0',
+                        border: 'none',
+                        outline: 'none',
+                        background: 'transparent',
+                        color: 'var(--core-colors-semantic-text-color-medium, #374151)',
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: '500',
+                        lineHeight: '24px',
+                        width: '100%'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <a href="#" onClick={(e) => e.preventDefault()} style={{ color: 'var(--core-colors-student-primary-Brand-logo, #1B5DEF)', fontSize: 14, fontFamily: 'Inter', fontWeight: '400', lineHeight: '21px', textDecoration: 'none' }}>Forgot password?</a>
               </div>
             </div>
-
-            {/* Password Field */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div style={{ color: 'var(--core-colors-semantic-text-color-medium, #374151)', fontSize: '16px', fontFamily: 'Inter', fontWeight: '500', lineHeight: '24px' }}>Password</div>
-              <div style={{
-                height: '48px',
-                padding: '0 16px',
-                background: 'var(--core-colors-semantic-bg-page, white)',
-                borderRadius: '8px',
-                border: '0.50px var(--core-colors-semantic-border-strong, #9CA3AF) solid',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <input
-                  type="password"
-                  placeholder="Enter Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  style={{
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    color: 'var(--core-colors-semantic-text-color-medium, #374151)',
-                    fontSize: '16px',
-                    fontFamily: 'Inter',
-                    fontWeight: '500',
-                    width: '100%'
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Forgot password */}
-            <a href="#" onClick={(e) => e.preventDefault()} style={{
-              color: 'var(--core-colors-student-primary-Brand-logo, #1B5DEF)',
-              fontSize: '14px',
-              fontFamily: 'Inter',
-              fontWeight: '400',
-              lineHeight: '21px',
-              textDecoration: 'none',
-              alignSelf: 'flex-start'
-            }}>
-              Forgot password?
-            </a>
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              width: '100%',
-              height: '48px',
-              background: 'var(--core-colors-student-primary-Brand-primary, #5988EF)',
-              borderRadius: '8px',
-              border: 'none',
-              outline: 'none',
-              cursor: 'pointer',
-              color: 'var(--core-colors-gray-gray-50, #FAFAFA)',
-              fontSize: '16px',
-              fontFamily: 'Inter',
-              fontWeight: '500',
-              lineHeight: '24px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              transition: 'background 0.2s'
-            }}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
+          {/* Login button */}
+          <div style={{ alignSelf: 'stretch', height: 48, position: 'relative' }}>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                height: 48,
+                left: 0,
+                top: 0,
+                position: 'absolute',
+                background: 'var(--core-colors-student-primary-Brand-primary-btn, #5988EF)',
+                borderRadius: 8,
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'inline-flex',
+                color: 'var(--core-colors-gray-gray-50, #FAFAFA)',
+                fontSize: 16,
+                fontFamily: 'Inter',
+                fontWeight: '500',
+                lineHeight: '24px',
+                textAlign: 'center',
+                transition: 'background 0.2s'
+              }}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </div>
         </form>
       </div>
     </div>
