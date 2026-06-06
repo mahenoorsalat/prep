@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import Logo from '../components/ui/Logo';
 import './Login.css';
 
 export default function Login() {
@@ -81,10 +82,8 @@ export default function Login() {
       {/* Right form panel */}
       <div className="login-page__form-wrapper">
         <div className="login-page__form-card animate-slideUp">
-          <div className="login-page__logo">
-            <span className="login-page__logo-p">P</span>
-            <span className="login-page__logo-text">rep</span>
-            <span className="login-page__logo-route">route</span>
+          <div className="login-page__logo" style={{ marginBottom: '32px' }}>
+            <Logo size="sm" />
           </div>
 
           <h1 className="login-page__title">Login</h1>

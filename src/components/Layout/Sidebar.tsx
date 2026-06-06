@@ -14,6 +14,7 @@ import {
   Layers,
   Bookmark,
 } from 'lucide-react';
+import Logo from '../ui/Logo';
 import './Sidebar.css';
 
 const navItems = [
@@ -56,10 +57,8 @@ export default function Sidebar() {
 
       {/* Main sidebar */}
       <div className="sidebar__main">
-        <div className="sidebar__logo">
-          <span className="sidebar__logo-p">P</span>
-          <span className="sidebar__logo-text">rep</span>
-          <span className="sidebar__logo-route">route</span>
+        <div className="sidebar__logo" style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border-light)', display: 'flex', justifyContent: 'center' }}>
+          <Logo size="lg" />
         </div>
 
         <nav className="sidebar__nav">
